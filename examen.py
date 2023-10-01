@@ -78,7 +78,7 @@ def degradar():
     alto = int(alto_var.get())
 
     canvas = PIL.Image.new('RGB', (ancho,alto),(255,255,255))
-    
+
     gl.drawGradientPolygon(vertices, color, canvas, centroid=None)
 
     tkpic = ImageTk.PhotoImage(canvas)
@@ -139,7 +139,7 @@ entryColor = Entry(
     fg='black',
     bg='#d3d3d3',
     textvariable='color_var',
-).pack(pady=10)
+).pack(pady=8)
 
 
 
