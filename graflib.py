@@ -159,43 +159,35 @@ def drawWireframePolygon(vertices, color, canvas):
         P1 = vertices[(i + 1) % num_vertices]
         drawLine(P0, P1, color, canvas)
 
-def drawPolygon(points, color, canvas):
-	if len(points) < 3:
-		print("No es un poligono")
-		return
+def drawFilledPolygon(vertices, color, canvas):
+    # Encontrar los límites del polígono en el plano cartesiano
 
-	for i in range(-1, len(points)-1):
-		drawLine(points[i], points[i+1], color, canvas)
+    # Función lambda que toma un vertice y devuelve la coordenada "x" de ese vértice
+    min_x = min(vertices, key=lambda vertex: vertex[0])[0]
+    max_x = max(vertices, key=lambda vertex: vertex[0])[0]
 
+    # Función lambda que toma un vertice y devuelve la coordenada "y" de ese vértice
+    min_y = min(vertices, key=lambda vertex: vertex[1])[1]
+    max_y = max(vertices, key=lambda vertex: vertex[1])[1]
 
-def drawFilledPolygon(points, color, canvas):
-	if len(points) < 3:
-		print("No es un poligono")
-		return
+    # Iterar a través de todos los píxeles dentro de los límites
+    for y in range(min_y, max_y + 1):
+        intersections = []
+        for i in range(len(vertices)):
+            P0 = vertices[i]
+            P1 = vertices[(i + 1) % len(vertices)]
+            if P0[1] <= y < P1[1] or P1[1] <= y < P0[1]:
+                x = round(P0[0] + (P1[0] - P0[0]) * (y - P0[1]) / (P1[1] - P0[1]))
+                intersections.append(x)
 
-	for i in range(1, len(points)-1):
-		drawFilledTriangle(points[0], points[i], points[i+1], color, canvas)
-	drawFilledTriangle(points[-1], points[-2], points[-3], color, canvas)
+        # Ordenar las intersecciones por coordenada x
+        intersections.sort()
 
+        # Rellenar los píxeles entre las intersecciones de forma horizontal
+        for i in range(0, len(intersections), 2):
+            for x in range(intersections[i], intersections[i + 1] + 1):
+                drawPoint(x, y, color, canvas)
 
-def drawGradientPolygon(points, color, canvas, centroid = None):
-	k=len(points)
-	i=0
-	if centroid is None:
-		cx=int(np.sum([point[0] for point in points])/k)
-		cy=int(np.sum([point[1] for point in points])/k)
-		puntoc=(cx,cy)
-	else:
-		x, y = canvas.size
-		puntoc = matrixToCartessian([(centroid[0], centroid[1])], x, y)[0]
-
-
-	while i < k-1:
-		drawShadedTriangle(puntoc, points[i], points[i + 1], color, canvas)
-		i=i+1
-		
-	drawShadedTriangle(puntoc,points[i],points[0],color,canvas)
-     
 def matrixToCartessian(matrix_points, width, height):
 	cartessian_points = []
 	for point in matrix_points:
