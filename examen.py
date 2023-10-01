@@ -1,6 +1,7 @@
 import PIL
 from PIL import ImageTk
 import math
+from tkinter import colorchooser
 import graflib as gl
 import numpy as np
 import tkinter as tk
@@ -20,7 +21,6 @@ alto_var = tk.StringVar()
 
 # Coordenadas de los vértices del polígono
 vertices = [(-200, -200), (-50, 80), (170, 170), (50,-80)]
-color = (0, 0, 0)
 
 # Creacion Frames
 frame1 = tk.Frame(app, bg='white')
@@ -37,7 +37,7 @@ def saludar():
     #Definir un lienzo
     canvas = PIL.Image.new('RGB', (ancho, alto), (255,255,255))
     
-    gl.drawWireframePolygon(vertices, color, canvas)
+    gl.drawWireframePolygon(vertices, (0, 0, 0), canvas)
 
     tkpic = ImageTk.PhotoImage(canvas)
     label = tk.Label(frame2, image=tkpic)
@@ -45,8 +45,12 @@ def saludar():
     label.pack()
 
     app.geometry(f"{ancho+300}x{alto+100}")
-    print('Hola')
 
+    relleno = colorchooser.askcolor(title ="Choose color")
+    print(relleno[0])
+    color = tuple(int(c) for c in relleno[0])
+    gl.drawFilledPolygon(vertices, color, canvas)
+    
 
 # Creacion de elementos
 tk.Label(
