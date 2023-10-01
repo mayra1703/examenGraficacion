@@ -38,6 +38,11 @@ def saludar():
     canvas = PIL.Image.new('RGB', (ancho, alto), (255,255,255))
     
     gl.drawWireframePolygon(vertices, (0, 0, 0), canvas)
+    
+    relleno = colorchooser.askcolor(title ="Choose color")
+    color = tuple(int(c) for c in relleno[0])
+    print(color)
+    gl.drawFilledPolygon(vertices, color, canvas)
 
     tkpic = ImageTk.PhotoImage(canvas)
     label = tk.Label(frame2, image=tkpic)
@@ -45,12 +50,6 @@ def saludar():
     label.pack()
 
     app.geometry(f"{ancho+300}x{alto+100}")
-
-    relleno = colorchooser.askcolor(title ="Choose color")
-    print(relleno[0])
-    color = tuple(int(c) for c in relleno[0])
-    gl.drawFilledPolygon(vertices, color, canvas)
-    
 
 # Creacion de elementos
 tk.Label(
