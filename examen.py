@@ -5,6 +5,8 @@ import graflib as gl
 import numpy as np
 import tkinter as tk
 from tkinter import *
+from tkinter import ttk
+from tkinter.colorchooser import askcolor
 
 # Crear Tkinter
 app = tk.Tk()
@@ -12,7 +14,8 @@ app = tk.Tk()
 # Configuracion de la interfaz
 app.geometry('800x400')
 app.title('Sombreado de un Poligono')
-
+app.title('Selecciona un color')
+app.geometry('300x150')
 # Tamaño de la imagen
 ancho_var = tk.StringVar()
 alto_var = tk.StringVar()
@@ -26,6 +29,7 @@ color = (0, 0, 0)
 frame1 = tk.Frame(app, bg='white')
 frame2 = tk.Frame(app, bg='#F2545B')
 
+#color definido por el usuario 
 
 # Funcion button
 def saludar():
@@ -46,6 +50,44 @@ def saludar():
 
     app.geometry(f"{ancho+300}x{alto+100}")
     print('Hola')
+
+
+def pintar():
+    tk.Label (frame2, fg='white', bg='#F2545B').pack()
+
+    ancho = int(ancho_var.get())
+    alto = int(alto_var.get())
+    
+    canvas = PIL.Image.new('RGB', (ancho,alto),(255,255,255))
+
+    color=askcolor(title="Selecciona un color")  
+
+    gl.drawFilledPolygon(vertices, color, canvas)
+
+    tkpic = ImageTk.PhotoImage(canvas)
+    label = tk.Label(frame2,image=tkpic)
+    label.image=tkpic
+    label.pack()
+    app.geometry(f"{ancho+300}x{alto+100}")
+    print('Disque estamos pintando')
+
+def degradar():
+    tk.Label(frame2,fg='white', bg='#F2545B').pack()
+
+    ancho = int(ancho_var.get())
+    alto = int(alto_var.get())
+
+    canvas = PIL.Image.new('RGB', (ancho,alto),(255,255,255))
+    
+    gl.drawGradientPolygon(vertices, color, canvas, centroid=None)
+
+    tkpic = ImageTk.PhotoImage(canvas)
+    label = tk.Label(frame2,image=tkpic)
+    label.image=tkpic
+    label.pack()
+    app.geometry(f"{ancho+300}x{alto+100}")
+    print('disque estamos degradando')
+    
 
 
 # Creacion de elementos
@@ -85,6 +127,22 @@ entryAlto = Entry(
     textvariable=alto_var,
 ).pack(pady=10)
 
+tk.Label(
+    frame1,
+    text='Ingresa el color deseado',
+    fg='black',
+    bg='white',
+).pack(pady=5)
+
+entryColor = Entry(
+    frame1,
+    fg='black',
+    bg='#d3d3d3',
+    textvariable='color_var',
+).pack(pady=10)
+
+
+
 tk.Button(
     frame1,
     text='Crear Canva',
@@ -101,6 +159,15 @@ tk.Label(
     bg='#F2545B',
     font=('Arial', 17)
 ).pack(pady=10)
+
+tk.Button(
+    frame1,
+    text='Pintar Poligno',
+    font=('Courier',10),
+    bg='#F2545B',
+    fg='white',
+    command=pintar,
+).pack(expand=True)
 
 
 frame1.pack(side=LEFT, expand=True, fill=BOTH)
