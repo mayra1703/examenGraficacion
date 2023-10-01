@@ -127,21 +127,6 @@ entryAlto = Entry(
     textvariable=alto_var,
 ).pack(pady=10)
 
-tk.Label(
-    frame1,
-    text='Ingresa el color deseado',
-    fg='black',
-    bg='white',
-).pack(pady=5)
-
-entryColor = Entry(
-    frame1,
-    fg='black',
-    bg='#d3d3d3',
-    textvariable='color_var',
-).pack(pady=8)
-
-
 
 tk.Button(
     frame1,
