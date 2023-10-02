@@ -64,6 +64,15 @@ def dibujarFigura():
         label.config(image=tkpic)
         label.image = tkpic  # Save reference to image
         label.pack()
+
+        def callback(event):
+            centroid = (event.x, event.y)
+            gl.drawGradientPolygon(gl.matrixToCartessian(vertices, ancho, alto), color, canvas, centroid)
+            tkpic = ImageTk.PhotoImage(canvas)
+            label.config(image=tkpic)
+            label.image = tkpic  # Save reference to image
+
+        label.bind("<Button-1>", callback)
   
     tk.Button(
         frame1,
