@@ -1,95 +1,110 @@
 import PIL
 from PIL import ImageTk
 import math
+from tkinter import colorchooser
 import graflib as gl
 import numpy as np
 import tkinter as tk
 from tkinter import *
-from tkinter import ttk
-from tkinter.colorchooser import askcolor
 
-# Crear Tkinter
+# Crear una ventana de Tkinter
 app = tk.Tk()
 
-# Configuracion de la interfaz
-app.geometry('800x400')
+# Configuración de la interfaz
+app.geometry('1000x500')
 app.title('Sombreado de un Poligono')
-app.title('Selecciona un color')
-app.geometry('300x150')
-# Tamaño de la imagen
+
+# Variables para el tamaño del lienzo
 ancho_var = tk.StringVar()
 alto_var = tk.StringVar()
 
+# Variables de condicion
+canva_creado = False
+poligono_creado = False
 
 # Coordenadas de los vértices del polígono
-vertices = [(-200, -200), (-50, 80), (170, 170), (50,-80)]
-color = (0, 0, 0)
+vertices = []
+#vertices = [(-200, -200),(175, 25), (25, 175), (-100, 100), (-150, 50)]
 
-# Creacion Frames
+# Creación de Frames
 frame1 = tk.Frame(app, bg='white')
-frame2 = tk.Frame(app, bg='#F2545B')
+frame2 = tk.Frame(app, bg='#006d77')
 
-#color definido por el usuario 
+# Función del botón "Crear Canva"
+def dibujarFigura():
 
-# Funcion button
-def saludar():
-    tk.Label(frame2, fg='white', bg='#F2545B').pack()
+    global canva_creado
+
+    if not canva_creado:
+        tk.Label(frame2, fg='white', bg='#006d77').pack()
+
+        ancho = int(ancho_var.get())
+        alto = int(alto_var.get())
+
+        # Definir un lienzo
+        canvas = PIL.Image.new('RGB', (ancho, alto), (255, 255, 255))
+
+        tkpic = ImageTk.PhotoImage(canvas)
+        label = tk.Label(frame2, image=tkpic)
+        label.image = tkpic  # Guardar una referencia a la imagen para evitar que se elimine
+        label.pack()
+        app.geometry(f"{ancho + 500}x{alto + 100}")
+
+        def callback(event):
+                color = (0, 0, 0)
+                gl.pointAround(canvas, event.x, event.y, (ancho, alto), color)
+                tkpic = ImageTk.PhotoImage(canvas)
+                label.config(image=tkpic)
+                label.image = tkpic  # Save reference to image
+                vertices.append((event.x, event.y))
+
+        label.bind("<Button-1>", callback)
+
+        def crearPoligono():
+            
+            global poligono_creado
+            
+            if not poligono_creado:
+                relleno = colorchooser.askcolor(title="Choose color")
+                color = tuple(int(c) for c in relleno[0])
+                print(color)
+
+                gl.drawPolygon(gl.matrixToCartessian(vertices, ancho, alto), (0, 0, 0), canvas)
+                gl.drawGradientPolygon(gl.matrixToCartessian(vertices, ancho, alto), color, canvas)
+
+                tkpic = ImageTk.PhotoImage(canvas)
+                label.config(image=tkpic)
+                label.image = tkpic  # Save reference to image
+                label.pack()
+
+                def callback(event):
+                    centroid = (event.x, event.y)
+                    gl.drawGradientPolygon(gl.matrixToCartessian(vertices, ancho, alto), color, canvas, centroid)
+                    tkpic = ImageTk.PhotoImage(canvas)
+                    label.config(image=tkpic)
+                    label.image = tkpic  # Save reference to image
+
+                label.bind("<Button-1>", callback)
+                poligono_creado = True
     
-    ancho = int(ancho_var.get())
-    alto = int(alto_var.get())
+        tk.Label(
+            frame1,
+            text='Ahora puedes dibujar los puntos de tu poligono en el canva!',
+            fg='black',
+            bg='white',
+        ).pack(pady=10)
+        
+        tk.Button(
+            frame1,
+            text='Crear Poligono',
+            font=('Courier', 10),
+            bg='#006d77',
+            fg='white',
+            command=crearPoligono,
+        ).pack()
 
-    #Definir un lienzo
-    canvas = PIL.Image.new('RGB', (ancho, alto), (255,255,255))
+        canva_creado = True
     
-    gl.drawWireframePolygon(vertices, color, canvas)
-
-    tkpic = ImageTk.PhotoImage(canvas)
-    label = tk.Label(frame2, image=tkpic)
-    label.image = tkpic  # Save reference to image
-    label.pack()
-
-    app.geometry(f"{ancho+300}x{alto+100}")
-    print('Hola')
-
-
-def pintar():
-    tk.Label (frame2, fg='white', bg='#F2545B').pack()
-
-    ancho = int(ancho_var.get())
-    alto = int(alto_var.get())
-    
-    canvas = PIL.Image.new('RGB', (ancho,alto),(255,255,255))
-
-    color=askcolor(title="Selecciona un color")  
-
-    gl.drawFilledPolygon(vertices, color, canvas)
-
-    tkpic = ImageTk.PhotoImage(canvas)
-    label = tk.Label(frame2,image=tkpic)
-    label.image=tkpic
-    label.pack()
-    app.geometry(f"{ancho+300}x{alto+100}")
-    print('Disque estamos pintando')
-
-def degradar():
-    tk.Label(frame2,fg='white', bg='#F2545B').pack()
-
-    ancho = int(ancho_var.get())
-    alto = int(alto_var.get())
-
-    canvas = PIL.Image.new('RGB', (ancho,alto),(255,255,255))
-
-    gl.drawGradientPolygon(vertices, color, canvas, centroid=None)
-
-    tkpic = ImageTk.PhotoImage(canvas)
-    label = tk.Label(frame2,image=tkpic)
-    label.image=tkpic
-    label.pack()
-    app.geometry(f"{ancho+300}x{alto+100}")
-    print('disque estamos degradando')
-    
-
-
 # Creacion de elementos
 tk.Label(
     frame1,
@@ -127,32 +142,22 @@ entryAlto = Entry(
     textvariable=alto_var,
 ).pack(pady=10)
 
-
 tk.Button(
     frame1,
     text='Crear Canva',
     font=('Courier', 10),
-    bg='#F2545B',
+    bg='#006d77',
     fg='white',
-    command=saludar,
-).pack()
+    command=dibujarFigura,
+).pack(pady=10)
 
 tk.Label(
     frame2,
     text='Canva',
     fg='white',
-    bg='#F2545B',
+    bg='#006d77',
     font=('Arial', 17)
 ).pack(pady=10)
-
-tk.Button(
-    frame1,
-    text='Pintar Poligno',
-    font=('Courier',10),
-    bg='#F2545B',
-    fg='white',
-    command=pintar,
-).pack(expand=True)
 
 
 frame1.pack(side=LEFT, expand=True, fill=BOTH)

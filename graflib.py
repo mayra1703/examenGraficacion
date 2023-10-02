@@ -1,4 +1,5 @@
 from PIL import Image, ImageDraw
+# Libreria personalizada de funciones graficas
 import math
 import numpy as np
 
@@ -154,39 +155,10 @@ def drawFilledTriangle(P0, P1, P2, color, canvas):
 
 def drawWireframePolygon(vertices, color, canvas):
     num_vertices = len(vertices)
-    for i in range(num_vertices):
+    for i in range(num_vertices - 1):
         P0 = vertices[i]
         P1 = vertices[(i + 1) % num_vertices]
         drawLine(P0, P1, color, canvas)
-
-def drawFilledPolygon(vertices, color, canvas):
-    # Encontrar los límites del polígono en el plano cartesiano
-
-    # Función lambda que toma un vertice y devuelve la coordenada "x" de ese vértice
-    min_x = min(vertices, key=lambda vertex: vertex[0])[0]
-    max_x = max(vertices, key=lambda vertex: vertex[0])[0]
-
-    # Función lambda que toma un vertice y devuelve la coordenada "y" de ese vértice
-    min_y = min(vertices, key=lambda vertex: vertex[1])[1]
-    max_y = max(vertices, key=lambda vertex: vertex[1])[1]
-
-    # Iterar a través de todos los píxeles dentro de los límites
-    for y in range(min_y, max_y + 1):
-        intersections = []
-        for i in range(len(vertices)):
-            P0 = vertices[i]
-            P1 = vertices[(i + 1) % len(vertices)]
-            if P0[1] <= y < P1[1] or P1[1] <= y < P0[1]:
-                x = round(P0[0] + (P1[0] - P0[0]) * (y - P0[1]) / (P1[1] - P0[1]))
-                intersections.append(x)
-
-        # Ordenar las intersecciones por coordenada x
-        intersections.sort()
-
-        # Rellenar los píxeles entre las intersecciones de forma horizontal
-        for i in range(0, len(intersections), 2):
-            for x in range(intersections[i], intersections[i + 1] + 1):
-                drawPoint(x, y, color, canvas)
 
 def matrixToCartessian(matrix_points, width, height):
 	cartessian_points = []
@@ -195,3 +167,45 @@ def matrixToCartessian(matrix_points, width, height):
 		y = -point[1] + height/2 # y = Ch/2 + y
 		cartessian_points.append((int(x), int(y)))
 	return cartessian_points
+
+def drawPolygon(vertices, color, canvas):
+	if len(vertices) < 3:
+		print("No es un poligono")
+		return
+
+	for i in range(-1, len(vertices)-1):
+		drawLine(vertices[i], vertices[i+1], color, canvas)
+
+def drawGradientPolygon(points, color, canvas, centroid = None):
+	k=len(points)
+	i=0
+	if centroid is None:
+		cx=int(np.sum([point[0] for point in points])/k)
+		cy=int(np.sum([point[1] for point in points])/k)
+		puntoc=(cx,cy)
+	else:
+		x, y = canvas.size
+		puntoc = matrixToCartessian([(centroid[0], centroid[1])], x, y)[0]
+
+
+	while i < k-1:
+		drawShadedTriangle(puntoc, points[i], points[i + 1], color, canvas)
+		i=i+1
+		
+	drawShadedTriangle(puntoc,points[i],points[0],color,canvas)
+
+
+def pointAround(canvas, x, y, canvas_size, color):
+	for i in range(0, 5):
+		if x-i >= 0:
+			canvas.putpixel((x-i, y), color)
+		
+		if x+i <= canvas_size[0]:
+			canvas.putpixel((x+i, y), color)
+
+		if y-i >= 0:
+			canvas.putpixel((x, y-i), color)
+		
+		if x+i <= canvas_size[1]:
+			canvas.putpixel((x, y+i), color)
+	
