@@ -19,11 +19,9 @@ alto_var = tk.StringVar()
 # Variables de condicion
 canva_creado = False
 poligono_creado = False
-canvas = None
 
 # Coordenadas de los vértices del polígono
 vertices = []
-#vertices = [(-200, -200),(175, 25), (25, 175), (-100, 100), (-150, 50)]
 
 # Creación de Frames
 frame1 = tk.Frame(app, bg='white')
@@ -110,14 +108,12 @@ def dibujarFigura():
         crear.pack()
 
         def borrar():
-            global canvas
             global canva_creado
             global poligono_creado
 
             canva_creado = False
             poligono_creado = False
 
-            canvas = None
             label.destroy()
             mensaje.destroy()
             crear.destroy()
