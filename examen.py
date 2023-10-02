@@ -20,7 +20,7 @@ alto_var = tk.StringVar()
 
 # Coordenadas de los vértices del polígono
 vertices = []
-vertices = [(-200, -200),(175, 25), (25, 175), (-100, 100), (-150, 50)]
+#vertices = [(-200, -200),(175, 25), (25, 175), (-100, 100), (-150, 50)]
 
 # Creación de Frames
 frame1 = tk.Frame(app, bg='white')
@@ -36,30 +36,42 @@ def dibujarFigura():
     # Definir un lienzo
     canvas = PIL.Image.new('RGB', (ancho, alto), (255, 255, 255))
 
-    relleno = colorchooser.askcolor(title="Choose color")
-    color = tuple(int(c) for c in relleno[0])
-    print(color)
-
-    gl.drawWireframePolygon(vertices, (0, 0, 0), canvas)
-    gl.drawGradientPolygon(vertices, color, canvas)
-
     tkpic = ImageTk.PhotoImage(canvas)
     label = tk.Label(frame2, image=tkpic)
     label.image = tkpic  # Guardar una referencia a la imagen para evitar que se elimine
     label.pack()
     app.geometry(f"{ancho + 300}x{alto + 100}")
 
-    
-    def borrarCanva():
-        label.config(image=None)  # Borra la imagen
+    def callback(event):
+            color = (0, 0, 0)
+            gl.pointAround(canvas, event.x, event.y, (ancho, alto), color)
+            tkpic = ImageTk.PhotoImage(canvas)
+            label.config(image=tkpic)
+            label.image = tkpic  # Save reference to image
+            vertices.append((event.x, event.y))
+
+    label.bind("<Button-1>", callback)
+
+    def crearPoligono():
+        relleno = colorchooser.askcolor(title="Choose color")
+        color = tuple(int(c) for c in relleno[0])
+        print(color)
+
+        gl.drawPolygon(gl.matrixToCartessian(vertices, ancho, alto), (0, 0, 0), canvas)
+        gl.drawGradientPolygon(gl.matrixToCartessian(vertices, ancho, alto), color, canvas)
+
+        tkpic = ImageTk.PhotoImage(canvas)
+        label.config(image=tkpic)
+        label.image = tkpic  # Save reference to image
+        label.pack()
   
     tk.Button(
         frame1,
-        text='Borra Canva',
+        text='Crear Poligono',
         font=('Courier', 10),
         bg='#F2545B',
         fg='white',
-        command=borrarCanva,
+        command=crearPoligono,
     ).pack()
   
 # Creacion de elementos

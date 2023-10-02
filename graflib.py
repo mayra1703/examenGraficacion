@@ -155,7 +155,7 @@ def drawFilledTriangle(P0, P1, P2, color, canvas):
 
 def drawWireframePolygon(vertices, color, canvas):
     num_vertices = len(vertices)
-    for i in range(num_vertices):
+    for i in range(num_vertices - 1):
         P0 = vertices[i]
         P1 = vertices[(i + 1) % num_vertices]
         drawLine(P0, P1, color, canvas)
