@@ -33,6 +33,9 @@ frame2 = tk.Frame(app, bg='#006d77')
 def dibujarFigura():
 
     global canva_creado
+    global mensaje
+    global crear
+    global borrarButton
 
     if not canva_creado:
         tk.Label(frame2, fg='white', bg='#006d77').pack()
@@ -50,11 +53,6 @@ def dibujarFigura():
         app.geometry(f"{ancho + 500}x{alto + 100}")
 
         
-        def borrar():
-            global canvas
-            canvas = None
-            label.config(image=None)
-
         def callback(event):
                 color = (0, 0, 0)
                 gl.pointAround(canvas, event.x, event.y, (ancho, alto), color)
@@ -92,31 +90,51 @@ def dibujarFigura():
                 label.bind("<Button-1>", callback)
                 poligono_creado = True
                 
-        tk.Label(
+        mensaje = Label(
             frame1,
             text='Ahora puedes dibujar los puntos de tu poligono en el canva!',
             fg='black',
             bg='white',
-        ).pack(pady=10)
+        )
         
-        tk.Button(
+        mensaje.pack(pady=10)
+        
+        crear = Button(
             frame1,
             text='Crear Poligono',
             font=('Courier', 10),
             bg='#006d77',
             fg='white',
             command=crearPoligono,
-        ).pack()
+        )
+        crear.pack()
 
-        tk.Button(
+        def borrar():
+            global canvas
+            global canva_creado
+            global poligono_creado
+
+            canva_creado = False
+            poligono_creado = False
+
+            canvas = None
+            label.destroy()
+            mensaje.destroy()
+            crear.destroy()
+            borrarButton.destroy()
+
+        borrarButton = Button(
             frame1,
             text='Borrar Canva',
             font=('Courier', 10),
             bg='#006d77',
             fg='white',
-            command=borrar,
-        ).pack(pady=10)
+            command= borrar,
+        )
+        
+        borrarButton.pack(pady=10)
 
+        
         canva_creado = True
     
 # Creacion de elementos
