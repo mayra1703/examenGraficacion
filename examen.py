@@ -48,7 +48,7 @@ def dibujarFigura():
         label = tk.Label(frame2, image=tkpic)
         label.image = tkpic  # Guardar una referencia a la imagen para evitar que se elimine
         label.pack()
-        app.geometry(f"{ancho + 500}x{alto + 100}")
+        app.geometry(f"{ancho + 800}x{alto + 500}")
 
         def callback(event):
                 color = (0, 0, 0)
@@ -104,6 +104,7 @@ def dibujarFigura():
         ).pack()
 
         canva_creado = True
+
     
 # Creacion de elementos
 tk.Label(
