@@ -1,9 +1,7 @@
 import PIL
-from PIL import ImageTk
-import math
+from PIL import Image, ImageTk
 from tkinter import colorchooser
 import graflib as gl
-import numpy as np
 import tkinter as tk
 from tkinter import *
 
@@ -21,6 +19,7 @@ alto_var = tk.StringVar()
 # Variables de condicion
 canva_creado = False
 poligono_creado = False
+canvas = None
 
 # Coordenadas de los vértices del polígono
 vertices = []
@@ -50,6 +49,12 @@ def dibujarFigura():
         label.pack()
         app.geometry(f"{ancho + 500}x{alto + 100}")
 
+        
+        def borrar():
+            global canvas
+            canvas = None
+            label.config(image=None)
+
         def callback(event):
                 color = (0, 0, 0)
                 gl.pointAround(canvas, event.x, event.y, (ancho, alto), color)
@@ -59,11 +64,11 @@ def dibujarFigura():
                 vertices.append((event.x, event.y))
 
         label.bind("<Button-1>", callback)
-
+  
         def crearPoligono():
             
             global poligono_creado
-            
+
             if not poligono_creado:
                 relleno = colorchooser.askcolor(title="Choose color")
                 color = tuple(int(c) for c in relleno[0])
@@ -86,7 +91,7 @@ def dibujarFigura():
 
                 label.bind("<Button-1>", callback)
                 poligono_creado = True
-    
+                
         tk.Label(
             frame1,
             text='Ahora puedes dibujar los puntos de tu poligono en el canva!',
@@ -102,6 +107,15 @@ def dibujarFigura():
             fg='white',
             command=crearPoligono,
         ).pack()
+
+        tk.Button(
+            frame1,
+            text='Borrar Canva',
+            font=('Courier', 10),
+            bg='#006d77',
+            fg='white',
+            command=borrar,
+        ).pack(pady=10)
 
         canva_creado = True
     
