@@ -10,7 +10,7 @@ height = 501
 # Definir un lienzo
 canvas = Image.new('RGB', (width, height), (255, 255, 255))
 
-def drawShadedTriangle(P0, P1, P2, color, canvas):
+def drawShadedPolygon(P0, P1, P2, color, canvas):
     # Sort the points so that y0 <= y1 <= y2
     h0 = 1
     h1 = 0
@@ -93,25 +93,25 @@ def drawShadedTriangle(P0, P1, P2, color, canvas):
             gl.drawPoint(int(x), int(y), shaded_color, canvas)
 
 # Puntos iniciales
-puntos = [(-200, -200),(175,25), (25,175), (-100,100), (-150,50)]
+vertices = [(-200, -200),(175,25), (25,175), (-100,100), (-150,50)]
 # color de la linea
 color = (255, 100, 255)
 
-print(puntos)
-k = len(puntos)
-cx = int(np.sum([punto[0] for punto in puntos])/k)
+print(vertices)
+k = len(vertices)
+cx = int(np.sum([punto[0] for punto in vertices])/k)
 print (cx)
-cy = int(np.sum([punto[1] for punto in puntos])/k)
+cy = int(np.sum([punto[1] for punto in vertices])/k)
 print (cy)
 i = 0
 puntoc = (cx,cy)
 
 while i < k-1:
-    print(puntoc,puntos[i],puntos[i+1])
+    print(puntoc, vertices[i], vertices[i+1])
     #gl.drawWireframeTriangle(puntoc,puntos[i],puntos[i+1],color,canvas)
-    drawShadedTriangle(puntoc, puntos[i], puntos[i + 1], color, canvas)
+    drawShadedPolygon(puntoc, vertices[i], vertices[i + 1], color, canvas)
     i = i + 1
 #gl.drawWireframeTriangle(puntoc,puntos[i],puntos[0],color, canvas)
-drawShadedTriangle(puntoc,puntos[i],puntos[0],color,canvas)
+drawShadedPolygon(puntoc, vertices[i], vertices[0], color, canvas)
 
 canvas.show()

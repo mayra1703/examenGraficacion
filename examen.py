@@ -7,50 +7,61 @@ import numpy as np
 import tkinter as tk
 from tkinter import *
 
-# Crear Tkinter
+# Crear una ventana de Tkinter
 app = tk.Tk()
 
-# Configuracion de la interfaz
+# Configuración de la interfaz
 app.geometry('800x400')
 app.title('Sombreado de un Poligono')
 
-# Tamaño de la imagen
+# Variables para el tamaño del lienzo
 ancho_var = tk.StringVar()
 alto_var = tk.StringVar()
 
-
 # Coordenadas de los vértices del polígono
-vertices = [(-200, -200), (-50, 80), (170, 170), (50,-80)]
+vertices = []
+vertices = [(-200, -200),(175, 25), (25, 175), (-100, 100), (-150, 50)]
 
-# Creacion Frames
+# Creación de Frames
 frame1 = tk.Frame(app, bg='white')
 frame2 = tk.Frame(app, bg='#F2545B')
 
-
-# Funcion button
-def saludar():
+# Función del botón "Crear Canva"
+def dibujarFigura():
     tk.Label(frame2, fg='white', bg='#F2545B').pack()
-    
+
     ancho = int(ancho_var.get())
     alto = int(alto_var.get())
 
-    #Definir un lienzo
-    canvas = PIL.Image.new('RGB', (ancho, alto), (255,255,255))
-    
-    gl.drawWireframePolygon(vertices, (0, 0, 0), canvas)
-    
-    relleno = colorchooser.askcolor(title ="Choose color")
+    # Definir un lienzo
+    canvas = PIL.Image.new('RGB', (ancho, alto), (255, 255, 255))
+
+    relleno = colorchooser.askcolor(title="Choose color")
     color = tuple(int(c) for c in relleno[0])
     print(color)
-    gl.drawFilledPolygon(vertices, color, canvas)
+
+    gl.drawWireframePolygon(vertices, (0, 0, 0), canvas)
+    gl.drawGradientPolygon(vertices, color, canvas)
 
     tkpic = ImageTk.PhotoImage(canvas)
     label = tk.Label(frame2, image=tkpic)
-    label.image = tkpic  # Save reference to image
+    label.image = tkpic  # Guardar una referencia a la imagen para evitar que se elimine
     label.pack()
+    app.geometry(f"{ancho + 300}x{alto + 100}")
 
-    app.geometry(f"{ancho+300}x{alto+100}")
-
+    
+    def borrarCanva():
+        label.config(image=None)  # Borra la imagen
+  
+    tk.Button(
+        frame1,
+        text='Borra Canva',
+        font=('Courier', 10),
+        bg='#F2545B',
+        fg='white',
+        command=borrarCanva,
+    ).pack()
+  
 # Creacion de elementos
 tk.Label(
     frame1,
@@ -94,7 +105,7 @@ tk.Button(
     font=('Courier', 10),
     bg='#F2545B',
     fg='white',
-    command=saludar,
+    command=dibujarFigura,
 ).pack()
 
 tk.Label(
