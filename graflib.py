@@ -208,4 +208,20 @@ def pointAround(canvas, x, y, canvas_size, color):
 		
 		if x+i <= canvas_size[1]:
 			canvas.putpixel((x, y+i), color)
-	
+
+def viewportToCanvas(x, y):
+    Cw=501
+    Vw=501
+    Ch=501
+    Vh=501
+    return (int(x * Cw/Vw), int(y * Ch/Vh))
+
+def projectVertex(v):
+    d=50
+    vx=v[0]
+    vy=v[1]
+    vz=v[2]
+    px=vx * d / vz
+    py=vy * d / vz
+    print('px: ',px,' py: ', py)
+    return viewportToCanvas(px, py)
