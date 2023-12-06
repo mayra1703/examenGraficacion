@@ -174,7 +174,7 @@ class StartPage(tk.Frame):
             # Pide tipo de modelo, posición, orientación y escala
 			instance = gl.Instance(cube, gl.Vertex(figure_data.x, figure_data.y, figure_data.z), gl.MakeOYRotationMatrix(figure_data.rotation), figure_data.scale)
 		else:
-			sphere = gl.GenerateSphere(25, gl.GREEN) # Función que regresa vertices, triangles, centroide= Vertex(0, 0, 0), radio= 1.0
+			sphere = gl.GenerateSphere(25, gl.PURPLE) # Función que regresa vertices, triangles, centroide= Vertex(0, 0, 0), radio= 1.0
 			instance = gl.Instance(sphere, gl.Vertex(figure_data.x, figure_data.y, figure_data.z), gl.MakeOYRotationMatrix(figure_data.rotation), figure_data.scale)
 
         # Guardar la figura dentro del arreglo
