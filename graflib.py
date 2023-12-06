@@ -117,7 +117,7 @@ class Instance:
 
 
 
-# The Camera.
+# Clase Camara
 class Camera: 
 	def __init__(self, position, orientation):
 		self.position = position

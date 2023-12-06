@@ -174,15 +174,20 @@ class StartPage(tk.Frame):
             # Pide tipo de modelo, posición, orientación y escala
 			instance = gl.Instance(cube, gl.Vertex(figure_data.x, figure_data.y, figure_data.z), gl.MakeOYRotationMatrix(figure_data.rotation), figure_data.scale)
 		else:
-			sphere = gl.GenerateSphere(25, gl.GREEN)
+			sphere = gl.GenerateSphere(25, gl.GREEN) # Función que regresa vertices, triangles, centroide= Vertex(0, 0, 0), radio= 1.0
 			instance = gl.Instance(sphere, gl.Vertex(figure_data.x, figure_data.y, figure_data.z), gl.MakeOYRotationMatrix(figure_data.rotation), figure_data.scale)
 
+        # Guardar la figura dentro del arreglo
 		instances = [
 			instance
 		]
-		camera = gl.Camera(gl.Vertex(camera_data.x, camera_data.y, camera_data.z), gl.MakeOYRotationMatrix(camera_data.rotation))
+		# Clase para definir posición y orientación
+		camera = gl.Camera(gl.Vertex(camera_data.x, camera_data.y, camera_data.z), gl.MakeOYRotationMatrix(camera_data.rotation)) # Vertex valores (x, y, z) en 3D
 
+        # Parte la de formula de clipping
 		s2 = math.sqrt(2)
+		
+        # Clase que pide la normal y la distancia
 		camera.clipping_planes = [
 			gl.Plane(gl.Vertex(    0,     0,    1), -1), # Near
 			gl.Plane(gl.Vertex( s2,     0, s2),    0), # Left
