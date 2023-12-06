@@ -160,7 +160,7 @@ class StartPage(tk.Frame):
     # Método estatico para dibujar la figura en el canvas
 	@staticmethod
 	def drawCanvas(light_data, camera_data, figure_data):
-		canvas = Image.new("RGB", (601, 601), (255, 255, 255))
+		canvas = Image.new("RGB", (1920, 1920), (255, 255, 255))
 		depth_buffer = np.zeros( canvas.size[0] * canvas.size[1])
 
         # Llamar a la función vertices y triangles en caso de ser un cubo
@@ -174,7 +174,7 @@ class StartPage(tk.Frame):
             # Pide tipo de modelo, posición, orientación y escala
 			instance = gl.Instance(cube, gl.Vertex(figure_data.x, figure_data.y, figure_data.z), gl.MakeOYRotationMatrix(figure_data.rotation), figure_data.scale)
 		else:
-			sphere = gl.GenerateSphere(25, gl.GREEN)
+			sphere = gl.GenerateSphere(25, gl.PURPLE)
 			instance = gl.Instance(sphere, gl.Vertex(figure_data.x, figure_data.y, figure_data.z), gl.MakeOYRotationMatrix(figure_data.rotation), figure_data.scale)
 
 		instances = [
