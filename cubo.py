@@ -1,5 +1,4 @@
-from PIL import Image,ImageDraw
-import math
+from PIL import Image
 import graflib as gl
 
 red = (255, 0, 0)
@@ -17,7 +16,7 @@ vertices = [
     [4, 4, 3], # Punto E
     [3, 4, 3], # Punto F
     [3, 3, 3], # Punto G
-    [4, 3, 3] # Punto H
+    [4, 3, 3]  # Punto H
 ]
 
 triangulos = [
@@ -52,17 +51,17 @@ def renderTriangle(triangulo, projected, canvas):
         triangulo[3], canvas
     )
 
-#Tamaño de la imagen
+# Tamaño de la imagen
 width = 501
 height = 501
 
-#Definir un lienzo
+# Definir un lienzo
 canvas = Image.new('RGB', (width, height), (255, 255, 255))
 
-#color de la linea
+# Color de la linea
 color = (0,0,0)
 
-#dibujar el contorno
+# Dibujar el contorno
 renderObject(vertices, triangulos, canvas)
 
 canvas.show()
